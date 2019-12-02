@@ -119,7 +119,7 @@
             die("Eredménytelen a lekérdezés!");
         }
 
-        //var_dump($result);
+//        var_dump($result);
        
         if ($result->num_rows > 0) {
             // output data of each row
