@@ -20,4 +20,24 @@
         echo file_get_contents($html);
     }
 
+    
+    function printMenu(){
+        
+        $menu = file_get_contents("html/menu.html");
+    
+        if (isLogged()) {
+            $menu = str_replace('::ki_belepes', 
+                    '<li class="nav-item">'
+                        . '<a class="nav-link text-light" href="logout.php">Kilepes</a>'
+                        . '</li>',
+                    $menu);
+        }else{
+            $menu = str_replace('::ki_belepes',
+                    '<li class="nav-item">'
+                        . '<a class="nav-link text-light" href="login.php">Bejelentkezés</a>'
+                        . '</li>',
+                    $menu);
+        }    
+        return $menu;
+    }
 ?>
