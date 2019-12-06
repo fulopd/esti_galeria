@@ -1,17 +1,25 @@
-<!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title></title>
-    </head>
-    <body>
-        <?php
-        // put your code here
-        ?>
-    </body>
-</html>
+<?php   
+    require_once('config/init.php');
+    
+    printHTML("html/header.html");
+        
+    $menu = file_get_contents("html/menu.html");
+    
+    if (isLogged()) {
+        $menu = str_replace('::ki_belepes', 
+                '<li class="nav-item">'
+                    . '<a class="nav-link text-light" href="logout.php">Kilepes</a>'
+                    . '</li>',
+                $menu);
+    }else{
+        $menu = str_replace('::ki_belepes',
+                '<li class="nav-item">'
+                    . '<a class="nav-link text-light" href="login.php">Bejelentkezés</a>'
+                    . '</li>',
+                $menu);
+    }    
+    echo $menu;
+    
+    printHTML("html/footer.html");    
+    $connect -> close();
+?>
