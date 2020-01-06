@@ -1,12 +1,10 @@
 <?php
-    $host = "localhost";
-    $connect = new mysqli($host,"root","","esti_galeria","3306");
 
-    if ($connect -> errno) { //hibaüzenetek számát adja vissza (ha minden jó 0 -t ad vissza)
-        die("Nem sikerült csatlakozni az adatbázishoz");
-    }
+$con = new mysqli('localhost','root','','esti_galeria','3306');
 
-    if (!$connect -> set_charset("utf8")) {
-        echo "Nem sikerült beállítani a karakter kódolást!";
-    }    
-?>
+if ($con -> errno){
+    die('Nem sikerült csatlakozi az adatbázishoz!');
+}
+if (!$con ->set_charset('utf8')){
+    echo 'A karakterkódolás beállísa sikertelen!';
+}

@@ -1,24 +1,37 @@
 <?php
-    require_once('config/init.php');
-    
-    printHTML("html/header.html");
-    echo printMenu();
-    
-?>
 
-<br>
-<div class="centerForm">
-    <form action="#">
-        <div class="form-group col-md-3">
-        Email cím: <input class="form-control" type="text" name="email" value="">
-        <br>
-        Jelszó: <input class="form-control" type="password" name="password" value="">  
-        <br>
-        <input class="btn btn-primary" type="submit" value="Belépés">
-        </<div>
-    </form> 
-</div>
-<?php
-    printHTML("html/footer.html");    
-    $connect -> close();
-?>
+require_once('config/init.php');
+if (!empty($_POST['email']) && (!empty($_POST['password']))){
+    if (isset($_SESSION['loginError'])){
+        unset($_SESSION['loginError']);
+    }
+    $email = $_POST['email'];
+    $pwd = $_POST['password'];
+    $sql = "SELECT id, email FROM felhasznalo WHERE email = ? AND jelszo = ?";
+    $stmt = $con -> prepare($sql);
+    $stmt -> bind_param('ss',$email, $pwd);
+    $stmt -> execute();
+    $stmt ->store_result();
+    //dd($stmt);
+    if ($stmt -> num_rows == 1){
+        //belépett
+        $stmt -> bind_result($id, $email);
+        $stmt -> fetch();
+        //dd($id);
+        $_SESSION['fid'] = $id;
+        header('Location: galeria.php');
+    } else {
+        //sikertelen a belépés
+        $_SESSION['loginError'] = "Helytelen belépési adatok!";
+        header('Location: login.php');
+    }
+    
+}
+printHTML('html/header.html');
+
+echo printMenu();
+
+printHTML('html/login_form.html');
+printHTML('html/footer.html');
+$con -> close();
+
