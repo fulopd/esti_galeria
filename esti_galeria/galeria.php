@@ -1,13 +1,11 @@
 <?php
 require_once('config/init.php');
 
-printHTML('html/header.html');
-
-echo printMenu();
-
+$content = '';
 if (!isLogged()){
-    echo 'Képek megtekintéshez először jelentkezz be!';
-    //dd($_SESSION);
+    $_SESSION['loginError'] = 'Képek megtekintéshez először jelentkezz be!';
+    
+    header('Location: login.php');
 } else {
     
     $fid = $_SESSION['fid'];
@@ -15,20 +13,26 @@ if (!isLogged()){
     $res = $con -> query($sql);
     if (!$res){
         die('Hiba a lekérdezés végrehajtásában!');
+        
     }
-    $content = '';
-    while ($row = $res -> fetch_assoc()){
-        $content .= '<div class="card col-3">'
-                . '<img class="w-100 card-image-top " src="'.$row['utvonal'].$row['fajlnev'].'"'
+    
+    $content = '<div class="card-deck">';
+    while ($row = $res -> fetch_assoc()){        
+        $content .= '<div class="card">'
+                . '<img class="w-100 card-image-top " src="'.$row['utvonal'].$row['fajlnev'].'">'
                 . '<div class="card-body">'
-                . '<p class="card-text">'.$row['cim'].'</p>'
-                . '<p class="btn btn-primary">Részletek</p>'
-                . '</div>'                
+                . '<h2 class="card-title">'.$row['cim'].'</h2>'
+                . '<p data-azonosito="'.$row['id'].'" class="reszletek btn btn-primary">Részletek</p>'
+                . '</div>'                           
                 . '</div>';
     }
-    echo $content;
+    $content .='</div>';
+    
 }
 
+printHTML('html/header.html');
+echo printMenu();
+echo $content;
 printHTML('html/footer.html');
 
 $con -> close();

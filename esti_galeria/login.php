@@ -23,14 +23,17 @@ if (!empty($_POST['email']) && (!empty($_POST['password']))){
     } else {
         //sikertelen a belépés
         $_SESSION['loginError'] = "Helytelen belépési adatok!";
-        header('Location: login.php');
+        
     }
     
 }
 printHTML('html/header.html');
 
 echo printMenu();
-
+if(!empty($_SESSION['loginError'])){
+    echo '<h3 class="text-center text-danger">'.$_SESSION['loginError'].'</h3>';
+    unset($_SESSION['loginError']);
+}
 printHTML('html/login_form.html');
 printHTML('html/footer.html');
 $con -> close();
