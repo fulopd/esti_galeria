@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2020. Jan 06. 17:54
+-- Létrehozás ideje: 2020. Jan 15. 19:34
 -- Kiszolgáló verziója: 10.1.34-MariaDB
 -- PHP verzió: 7.2.8
 
@@ -30,11 +30,14 @@ USE `esti_galeria`;
 -- Tábla szerkezet ehhez a táblához `felhasznalo`
 --
 
-CREATE TABLE `felhasznalo` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `felhasznalo`;
+CREATE TABLE IF NOT EXISTS `felhasznalo` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `email` varchar(255) COLLATE utf8_hungarian_ci NOT NULL,
-  `jelszo` varchar(255) COLLATE utf8_hungarian_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+  `jelszo` varchar(255) COLLATE utf8_hungarian_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
 --
 -- A tábla adatainak kiíratása `felhasznalo`
@@ -49,59 +52,28 @@ INSERT INTO `felhasznalo` (`id`, `email`, `jelszo`) VALUES
 -- Tábla szerkezet ehhez a táblához `kepek`
 --
 
-CREATE TABLE `kepek` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `kepek`;
+CREATE TABLE IF NOT EXISTS `kepek` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `fid` int(11) NOT NULL,
   `cim` varchar(64) COLLATE utf8_hungarian_ci NOT NULL,
   `fajlnev` varchar(255) COLLATE utf8_hungarian_ci NOT NULL,
   `utvonal` varchar(255) COLLATE utf8_hungarian_ci NOT NULL,
   `leiras` varchar(1000) COLLATE utf8_hungarian_ci NOT NULL,
   `keszult` datetime NOT NULL,
-  `feltoltes` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+  `feltoltes` date NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fid` (`fid`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
 --
 -- A tábla adatainak kiíratása `kepek`
 --
 
 INSERT INTO `kepek` (`id`, `fid`, `cim`, `fajlnev`, `utvonal`, `leiras`, `keszult`, `feltoltes`) VALUES
-(1, 1, 'Kávé 1', 'clay-banks-_wkd7XBRfU4-unsplash.jpg', 'images/', 'Gondolatébresztő', '2019-12-16 10:34:00', '2019-12-16'),
-(2, 1, 'Kávé 2', 'nathan-dumlao-zUNs99PGDg0-unsplash.jpg', 'images/', 'Gondolatébresztő új köntösben', '2019-12-16 15:11:00', '2019-12-16'),
-(3, 1, 'Kávé 3', 'nathan-dumlao-N3btvQ51dL0-unsplash.jpg', 'images/', 'Még egy kis kitartás...', '2019-12-16 19:15:00', '2019-12-16');
-
---
--- Indexek a kiírt táblákhoz
---
-
---
--- A tábla indexei `felhasznalo`
---
-ALTER TABLE `felhasznalo`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `email` (`email`);
-
---
--- A tábla indexei `kepek`
---
-ALTER TABLE `kepek`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fid` (`fid`);
-
---
--- A kiírt táblák AUTO_INCREMENT értéke
---
-
---
--- AUTO_INCREMENT a táblához `felhasznalo`
---
-ALTER TABLE `felhasznalo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT a táblához `kepek`
---
-ALTER TABLE `kepek`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+(1, 1, 'k1', 'clay-banks-_wkd7XBRfU4-unsplash.jpg', 'images/', 'Egy remek kép', '2019-12-16 08:16:00', '2019-12-16'),
+(2, 1, 'kép 2', 'nathan-dumlao-N3btvQ51dL0-unsplash.jpg', 'images/', 'Ez egy másik kép', '2019-12-15 00:00:00', '2019-12-15'),
+(3, 1, 'Kep3', 'nathan-dumlao-zUNs99PGDg0-unsplash.jpg', 'images/', 'kep3 leirasa', '2020-01-15 00:00:00', '2020-01-15');
 
 --
 -- Megkötések a kiírt táblákhoz
