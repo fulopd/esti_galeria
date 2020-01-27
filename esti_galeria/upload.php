@@ -9,6 +9,7 @@ if (!isLogged()) {
     header('Location: login.php');
     die();
 }
+
 $_SESSION['uploadError'] = '';
 $fid = $_SESSION['fid'];
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && (!empty($_FILES['file']))) {
@@ -19,35 +20,50 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && (!empty($_FILES['file']))) {
     $title = $_POST['title'];
     $desc = $_POST['description'];
     $date = $_POST['date'];
+    $size = $_FILES['file']['size'];
     //var_dump($_POST);
     //echo $fileType, $fileName, $tmp;
     if (!in_array($fileType, $imgTypes)) {
         //Nem kép
         $_SESSION['upload'] .= '<h3 class="text-danger">Nem engedélyezett fájltípus!</h3>';
-        header('Location: upload.php');
     } else {
-        if (file_exists($folder . $fileName)) {
-            //Már létezik a kép
-            $_SESSION['uploadError'] .= '<h3 class="text-danger">A kép már korábban feltöltésre került!</h3>';            
-                        
+        if ($size > 20000000) {
+            //nem jó a méret
+            $_SESSION['upload'] .= '<h3 class="text-danger">Max 20MB lehet a feltölthető kép mérete</h3>';
         } else {
-            move_uploaded_file($tmp, $folder . $fileName);
-            $sql = "INSERT INTO kepek (fid, cim, fajlnev, utvonal, leiras, keszult, feltoltes) VALUES ($fid, ?, '$fileName', '$folder', ?, ?, CURDATE())";
-            $stmt = $con->prepare($sql);
-            $stmt->bind_param("sss", $title, $desc, $date);
-            $stmt->execute();
+
+            if (file_exists($folder . $fileName)) {
+                //Már létezik a kép
+                $_SESSION['uploadError'] .= '<h3 class="text-danger">A kép már korábban feltöltésre került!</h3>';
+            } else {
+                if (strlen($title) < 64 || strlen($desc) < 1000) {
+                    //cím és a leírás mérete nem jó
+                    $title = substr($title, 0, 64);
+                    $desc = substr($desc, 0, 1000);
+                }
+                if ($strlen($title) == 0) {
+                    //nem adtál meg címet
+                    $_SESSION['uploadError'] .= '<h3 class="text-danger">A képnek adj címet</h3>';
+                } else {
+                    move_uploaded_file($tmp, $folder . $fileName);
+                    $sql = "INSERT INTO kepek (fid, cim, fajlnev, utvonal, leiras, keszult, feltoltes) VALUES ($fid, ?, '$fileName', '$folder', ?, ?, CURDATE())";
+                    $stmt = $con->prepare($sql);
+                    $stmt->bind_param("sss", $title, $desc, $date);
+                    $stmt->execute();
+                }
+            }
         }
     }
 } else {
     //Nem kattintott a feltöltsére
     if (isset($_POST['submit'])) {
-        $_SESSION['uploadError'] .= '<h3 class="text-danger">Nem kattintottál a feltöltés gombra!</h3>';   
+        $_SESSION['uploadError'] .= '<h3 class="text-danger">Nem kattintottál a feltöltés gombra!</h3>';
     }
 }
 
 printHTML('html/header.html');
 echo printMenu();
-if (!empty($_SESSION['uploadError'])){
+if (!empty($_SESSION['uploadError'])) {
     echo $_SESSION['uploadError'];
     unset($_SESSION['uploadError']);
 }

@@ -1,4 +1,10 @@
-$(document).ready(function(){
+$(document).ready(function(){    
+    $(document).on('keyup','.desc',function(){
+       console.log("Leütések száma: "+this.value.length); 
+       let x = this.value.length;
+       let leutesek = document.getElementById("leutesek");
+       leutesek.innerHTML = 1000-x;
+    });  
    $(document).on('click','.reszletek',function(){
        let az = $(this).data('azonosito');
        // let az = $(this).attr('data-azonosito');
