@@ -1,56 +1,56 @@
 <?php
+
 require_once('config/init.php');
-
 $folder = 'images/';
-$content = '';
-$imgTypes = array('image/jpg','image/png','image/jpeg');
-
-
-if(!isLogged()){
-    $_SESSION['loginError'] = "Képek feltöltéséhez be kell jelentkezni";
+$content = "";
+$imgTypes = array("image/png", "image/jpeg", "image/jpg", "image/bmp");
+if (!isLogged()) {
+    $_SESSION['loginError'] = 'Képek feltöltéséhez először jelentkezz be!';
     header('Location: login.php');
     die();
 }
+$fid = $_SESSION['fid'];
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && (!empty($_FILES['file']))) {
 
-if($_SERVER['REQUEST_METHOD'] == 'POST' && (!empty($_FILES['file']))){
-    //var_dump($_FILES['file']);
-    $sql = "";
-    $fid = $_SESSION['fid'];
     $fileType = $_FILES['file']['type'];
     $fileName = $_FILES['file']['name'];
     $tmp = $_FILES['file']['tmp_name'];
-    
     $title = $_POST['title'];
-    $description = $_POST['description'];
+    $desc = $_POST['description'];
     $date = $_POST['date'];
-    
-    var_dump($_POST);
-    
+    //var_dump($_POST);
+    //echo $fileType, $fileName, $tmp;
     if (!in_array($fileType, $imgTypes)) {
-        echo "Nem kép";
-    }else{
-        
-        
-        move_uploaded_file($tmp, $folder.$fileName); 
-
-        $sql = "INSERT INTO kepek (fid, cim, fajlnev, utvonal, leiras, keszult, feltoltes) "
-                        . "VALUES ($fid, ?, $fileName, $folder, ?, ?, CURDATE())";
-        $stmt = $con -> prepare($sql);
-        $stmt -> bind_param('sss',$title,$description,$date);
-        $stmt -> execute();
-
-            
-       
-        
+        //Nem kép
+        $_SESSION['upload'] .= '<h3 class="text-danger">Nem engedélyezett fájltípus!</h3>';
+        header('Location: upload.php');
+    } else {
+        if (file_exists($folder . $fileName)) {
+            //Már létezik a kép
+            $_SESSION['upload'] .= '<h3 class="text-danger">A kép már korábban feltöltésre került!</h3>';
+            header('Location: upload.php');
+        } else {
+            move_uploaded_file($tmp, $folder . $fileName);
+            $sql = "INSERT INTO kepek (fid, cim, fajlnev, utvonal, leiras, keszult, feltoltes) VALUES ($fid, ?, '$fileName', '$folder', ?, ?, CURDATE())";
+            $stmt = $con->prepare($sql);
+            $stmt->bind_param("sss", $title, $desc, $date);
+            $stmt->execute();
+        }
     }
-            
-}else{
-    //TODO: nem volt POST
+} else {
+    //Nem kattintott a feltöltsére
+    if (isset($_POST['submit'])) {
+        $_SESSION['upload'] .= '<h3 class="text-danger">Nem kattintottál a feltöltés gombra!</h3>';
+    header('Location: upload.php');
+    }
 }
 
 printHTML('html/header.html');
 echo printMenu();
+if (!empty($_SESSION['upload'])){
+    echo $_SESSION['upload'];
+    unset($_SESSION['upload']);
+}
 printHTML('html/upload_form.html');
 printHTML('html/footer.html');
-
-$con -> close();
+$con->close();

@@ -1,8 +1,7 @@
-<form class="form-group w-25" action="upload.php" method="post" enctype="multipart/form-data">
-    <input class="form-control" type="text" name="title" placeholder="Kép címe">
-    <textarea class="proba form-control" rows="4" cols="50" name="description" placeholder="Leírás"></textarea>
-    <span id="leutesek">1000</span>
-    <input class="form-control" type="date" name="date">
-    <input class="form-control-file" type="file" name="file" accept="image/*">  
-    <input class="btn-success form-control" type="submit" value="Feltöltés">
+<form action="upload.php" method="post" enctype="multipart/form-data">
+    <input class="form-control-file" type="file" name="file" accept="image/*" required>
+    <input class="form-control" type="text" name="title" placeholder="Kép címe" required>
+    <textarea class="form-control" name="description" placeholder="Rövid leírás"></textarea>
+    <input type="date" class="form-control" name="date" required>
+    <input class="btn btn-primary form-control" type="submit" name="submit" value="Feltöltés">
 </form>
