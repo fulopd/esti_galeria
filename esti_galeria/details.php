@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && (!empty($_GET['kep']))){
             . '</div>'
             . '<div class="card-body">'
             . '<img class="w-25 rounded" src="'.$utvonal.$fajl.'" alt="kávé" title='.$cim.'>'
-            . '<p class="card-text font-weight-bold">'.$leiras.'</p>'
+            . '<p class="leiras card-text font-weight-bold" contenteditable>'.$leiras.'</p>'
             . '<p class="card-text">Készült: '.$keszult.'</p>'
             . '<p class="card-text">Feltöltés dátuma: '.$feltolt.'</p>'
             . '</div>'

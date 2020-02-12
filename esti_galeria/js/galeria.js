@@ -25,12 +25,36 @@ $(document).ready(function () {
         let id = $(this).data('id');
         //console.log(id, str);
         $.post('modifydetails.php', {id: id, cim: str}, function (adat, status) {
-            alert('A cím módosításra került!')
+            console.log('A cím módosításra került!')
             $('.cim').text(adat);
             //console.log($(this));
         }).fail(function () {
-            alert('Hiba!');
+            console.log('Hiba!');
         })
     }); // kép címének módosítása VÉGE
+
+    // Kép leírásának módosítása
+    $('.leiras').blur(function () {
+        let id = $('.cim').data('id');
+        let str = $(this).text();
+
+        console.log(id, str);
+        $.ajax({
+            url: 'modifydetails.php',
+            method: 'POST',
+            data: {id: id, desc: str}, //amit a servernek elküldök
+            dataType: 'text', //amit kapok a servertől (pl.: text, html, json)
+            success: function (adat) {
+                //response code = 200
+                $('.leiras').text(adat);
+                console.log("A kép leírása módosításra került!");
+            }, 
+            error: function () {
+                console.log("A kép leírása nem módosult!");
+            }
+        })
+
+    }); // kép leírásának módosítása VÉGE
+
 });
 
