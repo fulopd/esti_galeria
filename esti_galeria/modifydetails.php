@@ -1,23 +1,19 @@
 <?php
-
 require_once('config/init.php');
-
-if (!isLogged()) {
-    $_SESSION['loginError'] = 'Képek feltöltéséhez először jelentkezz be!';
-    header('Location: login.php');
-    die();
+if (!isLogged()){
+    header('Location: index.php');
 }
-
-if($_SERVER['REQUEST_METHOD'] == 'POST' && (!empty($_POST['cim']))){
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && (!empty($_POST['cim'])) &&(!empty($_POST['id']))){
     $cim = $_POST['cim'];
+    $cim = strlen($cim) < 6 ? $cim : substr($cim, 0, 6); 
+    $id = $_POST['id'];
+    $sql = "UPDATE kepek SET cim = '$cim' WHERE id = $id";
+    $con -> query($sql);
+    if ($con -> errno){
+        //Van hiba
+        http_response_code(503);
+    }
+    echo $cim;
 }
 
-$fid = $_SESSION['fid'];
-
-
-printHTML('html/header.html');
-echo printMenu();
-
-printHTML('html/upload_form.html');
-printHTML('html/footer.html');
-$con->close();
+$con -> close();
