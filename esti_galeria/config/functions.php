@@ -24,7 +24,8 @@ function printMenu() {
         $menu = str_replace('::ki_belepes', '<li class="nav-item">  <a class="nav-link text-light" href="upload.php">Feltöltés</a> </li>'
                 . '<li class="nav-item">  <a class="nav-link text-light" href="logout.php">Kilép</a> </li>', $menu);
     } else {
-        $menu = str_replace('::ki_belepes', '<li class="nav-item">  <a class="nav-link text-light" href="login.php">Belép</a> </li>', $menu);
+        $menu = str_replace('::ki_belepes', '<li class="nav-item">  <a class="nav-link text-light" href="reg.php">Regisztráció</a> </li>'
+                . '<li class="nav-item">  <a class="nav-link text-light" href="login.php">Belép</a> </li>', $menu);
     }
     return $menu;
 }

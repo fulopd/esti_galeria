@@ -1,4 +1,34 @@
 $(document).ready(function () {
+    $('[name=reg-form]').submit(function (event) {
+        event.preventDefault();
+        let email = $('[name=email]').val().trim();
+        let pass = $('[name=password]').val().trim();
+        let pass2 = $('[name=password2]').val().trim();
+        
+        var regex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/;
+
+        if (regex.test(pass) && pass === pass2) {
+            console.log("jee");
+            $.ajax({
+            url: 'modifydetails.php',
+            method: 'POST',
+            data: {id: id, desc: str}, //amit a servernek elküldök
+            dataType: 'text', //amit kapok a servertől (pl.: text, html, json)
+            success: function (adat) {
+                //response code = 200
+                $('.leiras').text(adat);
+                console.log("A kép leírása módosításra került!");
+            },
+            error: function () {
+                console.log("A kép leírása nem módosult!");
+            }
+        })
+        } else {
+            console.log("neee");
+        }
+
+    })
+
     $(document).on('click', '.reszletek', function () {
         let az = $(this).data('azonosito');
         // let az = $(this).attr('data-azonosito');
@@ -48,7 +78,7 @@ $(document).ready(function () {
                 //response code = 200
                 $('.leiras').text(adat);
                 console.log("A kép leírása módosításra került!");
-            }, 
+            },
             error: function () {
                 console.log("A kép leírása nem módosult!");
             }
